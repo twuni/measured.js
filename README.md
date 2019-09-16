@@ -38,11 +38,15 @@ const { measured } = require('@twuni/measured');
 
 Then, you can use the `measured()` function like this:
 
-```javascript
-// Before
-await doExpensiveThing();
+If this is what your code looked like **before**:
 
-// After
+```javascript
+await doExpensiveThing();
+```
+
+To measure that, just change it to read something like this:
+
+```javascript
 await measured(doExpensiveThing, {
   onComplete: ({ duration }) => {
     console.debug(`Completed in ${duration}ms`);
@@ -58,11 +62,28 @@ await measured(doExpensiveThing, {
 })();
 ```
 
+Each of these callbacks is optional and is described as follows:
+
  * The `#onComplete()` function will run whether the wrapped behavior resolves or rejects.
 
  * The `#onResolve()` function will run only when the wrapped behavior resolves.
 
  * The `#onReject()` function will run only when the wrapped behavior rejects.
+
+## Examples
+
+### Express.js Middleware
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.use((request, response, next) => measured(next, {
+  onComplete: ({ duration }) => {
+    console.log(`${request.method} ${request.path} served in ${duration}ms`);
+  }
+})());
+```
 
 [1]: https://img.shields.io/circleci/build/github/twuni/measured.js
 [2]: https://circleci.com/gh/twuni/measured.js
