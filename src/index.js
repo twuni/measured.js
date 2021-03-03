@@ -10,9 +10,9 @@ const STUB = () => true;
 const generateId = () => crypto.randomBytes(32).toString('base64');
 
 const getMeasurement = (performanceObserverItems) => {
-  const [{ duration, startTime }] = performanceObserverItems.getEntries();
+  const [{ duration, name, startTime }] = performanceObserverItems.getEntries();
   const endTime = startTime + duration;
-  const measurement = { duration, endTime, startTime };
+  const measurement = { duration, endTime, id: name, startTime };
   return measurement;
 };
 
@@ -58,6 +58,11 @@ const measured = (behavior, options = {}) => {
   const before = `${id}:before`;
   const after = `${id}:after`;
 
+  const clearMarks = () => {
+    performance.clearMarks(before);
+    performance.clearMarks(after);
+  };
+
   // The way the Node.js Performance API is designed makes this rule counter-productive
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
@@ -66,19 +71,20 @@ const measured = (behavior, options = {}) => {
     const observer = new PerformanceObserver((items) => {
       const measurement = getMeasurement(items);
 
-      performance.clearMarks(before);
-      performance.clearMarks(after);
-      observer.disconnect();
+      if (measurement.id === id) {
+        clearMarks();
+        observer.disconnect();
 
-      if (state.isRejected) {
-        onReject({ ...measurement });
-        reject(state.error);
-      } else {
-        onResolve({ ...measurement });
-        resolve(state.result);
+        if (state.isRejected) {
+          onReject({ ...measurement });
+          reject(state.error);
+        } else {
+          onResolve({ ...measurement });
+          resolve(state.result);
+        }
+
+        onComplete(measurement);
       }
-
-      onComplete(measurement);
     });
 
     observer.observe({ entryTypes: ['measure'] });

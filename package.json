@@ -16,7 +16,7 @@
     "build": "rm -vfR lib && babel --only '**/index.js' --no-comments --compact true --minified --source-maps false --out-dir lib src; cp -vfR package.json package-lock.json yarn.lock README.md LICENSE.md lib/",
     "documentation": "rm -fR docs; (cd src; find . -type f -name index.js | xargs jsdoc --destination ../docs --package ../package.json --readme ../README.md)",
     "lint": "eslint src",
-    "test": "nyc --silent --check-coverage --lines 100 --per-file mocha --require @babel/register src/spec.setup.js src/**/spec.js"
+    "test": "nyc --silent --check-coverage --lines 100 --branches 100 --functions 100 --statements 100 --per-file --include '**/index.js' mocha --require @babel/register src/spec.setup.js src/**/spec.js"
   },
   "devDependencies": {
     "@babel/cli": "7.6.0",
