@@ -19,22 +19,22 @@
     "test": "nyc --silent --check-coverage --lines 100 --branches 100 --functions 100 --statements 100 --per-file --include '**/index.js' mocha --require @babel/register src/spec.setup.js src/**/spec.js"
   },
   "devDependencies": {
-    "@babel/cli": "7.6.0",
-    "@babel/core": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@babel/register": "7.6.0",
-    "babel-eslint": "10.0.3",
-    "chai": "4.2.0",
+    "@babel/cli": "7.13.0",
+    "@babel/core": "7.13.8",
+    "@babel/eslint-parser": "7.13.8",
+    "@babel/preset-env": "7.13.9",
+    "@babel/register": "7.13.8",
+    "chai": "4.3.1",
     "chai-as-promised": "7.1.1",
-    "eslint": "6.4.0",
-    "eslint-plugin-ante": "1.0.3",
-    "jsdoc": "3.6.3",
-    "mocha": "6.2.0",
-    "nyc": "14.1.1",
-    "sinon": "7.4.2",
-    "sinon-chai": "3.3.0"
+    "eslint": "7.21.0",
+    "eslint-plugin-ante": "1.0.4",
+    "jsdoc": "3.6.6",
+    "mocha": "8.3.0",
+    "nyc": "15.1.0",
+    "sinon": "9.2.4",
+    "sinon-chai": "3.5.0"
   },
   "dependencies": {
-    "regenerator-runtime": "0.13.3"
+    "regenerator-runtime": "0.13.7"
   }
 }
