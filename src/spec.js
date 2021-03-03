@@ -5,6 +5,41 @@ import { fake } from 'sinon';
 import measured from '.';
 
 describe('#measured()', () => {
+  describe('when given an id', () => {
+    it('includes that id in its measurement', async () => {
+      const onComplete = fake();
+      const behavior = fake();
+      await measured(behavior, { id: 'CrabSalad', onComplete });
+      expect(onComplete.getCall(0).args[0]).to.have.property('id', 'CrabSalad');
+    });
+  });
+
+  describe('when nested within another measured block', () => {
+    it('invokes the onComplete callback of the outer block', async () => {
+      const inner = fake();
+      const outer = fake();
+      const behavior = fake();
+
+      await measured(async () => {
+        await measured(behavior, { onComplete: inner });
+      }, { onComplete: outer });
+
+      expect(outer).to.have.been.calledOnce;
+    });
+
+    it('invokes the onComplete callback of the inner block', async () => {
+      const inner = fake();
+      const outer = fake();
+      const behavior = fake();
+
+      await measured(async () => {
+        await measured(behavior, { onComplete: inner });
+      }, { onComplete: outer });
+
+      expect(inner).to.have.been.calledOnce;
+    });
+  });
+
   it('resolves to the wrapped resolution', () => {
     const result = 'the wrapped resolution';
     const behavior = fake.returns(result);
